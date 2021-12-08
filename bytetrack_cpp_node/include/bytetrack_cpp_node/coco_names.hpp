@@ -1,5 +1,4 @@
-#ifndef _YOLOX_CPP_COCO_NAMES_HPP
-#define _YOLOX_CPP_COCO_NAMES_HPP
+#pragma once
 
 namespace bytetrack_cpp_node{
     static const char* COCO_CLASSES[] = {
@@ -96,4 +95,3 @@ namespace bytetrack_cpp_node{
         {0.50, 0.5, 0}
     };
 }
-#endif

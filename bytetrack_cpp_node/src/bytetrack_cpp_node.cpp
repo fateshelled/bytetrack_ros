@@ -88,4 +88,12 @@ namespace bytetrack_cpp_node{
     }
 }
 
+int main(int argc, char * argv[])
+{
+  rclcpp::init(argc, argv);
+  rclcpp::NodeOptions node_options;
+  rclcpp::spin(std::make_shared<bytetrack_cpp_node::ByteTrackNode>(node_options));
+  rclcpp::shutdown();
+  return 0;
+}
 RCLCPP_COMPONENTS_REGISTER_NODE(bytetrack_cpp_node::ByteTrackNode)

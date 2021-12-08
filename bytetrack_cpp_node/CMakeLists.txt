@@ -24,42 +24,62 @@ find_package(Eigen3 REQUIRED)
 find_package(bboxes_ex_msgs REQUIRED)
 find_package(bytetrack_cpp REQUIRED)
 
-add_library(bytetrack_cpp_node SHARED
+# add executable
+add_executable(bytetrack_cpp_node
   src/bytetrack_cpp_node.cpp
 )
-rclcpp_components_register_nodes(bytetrack_cpp_node
- "bytetrack_cpp_node::ByteTrackNode")
-target_compile_definitions(bytetrack_cpp_node
-  PRIVATE "BYTETRACK_CPP_ROS_BUILDING_LIBRARY"
-)
-target_compile_options(bytetrack_cpp_node PUBLIC -Wall)
-
-target_include_directories(bytetrack_cpp_node PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<BUILD_INTERFACE:${EIGEN3_INCLUDE_DIR}>
-  $<INSTALL_INTERFACE:include>
-)
-
 ament_target_dependencies(bytetrack_cpp_node
   rclcpp
   rclcpp_components
   std_msgs
   bytetrack_cpp
   bboxes_ex_msgs
+)
+target_include_directories(bytetrack_cpp_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<BUILD_INTERFACE:${EIGEN3_INCLUDE_DIR}>
+  $<INSTALL_INTERFACE:include>
+)
+install(TARGETS
+bytetrack_cpp_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+# add component
+add_library(bytetrack_cpp_component SHARED
+  src/bytetrack_cpp_node.cpp
+)
+rclcpp_components_register_nodes(bytetrack_cpp_component
+ "bytetrack_cpp_node::ByteTrackNode")
+target_compile_definitions(bytetrack_cpp_component
+  PRIVATE "BYTETRACK_CPP_ROS_BUILDING_LIBRARY"
+)
+target_compile_options(bytetrack_cpp_component PUBLIC -Wall)
+target_include_directories(bytetrack_cpp_component PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<BUILD_INTERFACE:${EIGEN3_INCLUDE_DIR}>
+  $<INSTALL_INTERFACE:include>
+)
+ament_target_dependencies(bytetrack_cpp_component
+  rclcpp
+  rclcpp_components
+  std_msgs
+  bytetrack_cpp
+  bboxes_ex_msgs
   )
-
-
-install(TARGETS bytetrack_cpp_node
+install(TARGETS bytetrack_cpp_component
   EXPORT export_${PROJECT_NAME}
   DESTINATION lib
 )
 
+# launch, param, etc...
 install(DIRECTORY
   # launch
   # param
   DESTINATION share/${PROJECT_NAME}
 )
 
+# test
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
