@@ -4,6 +4,9 @@ This package is a port of [ByteTrack](https://github.com/ifzhang/ByteTrack) to R
 The object detector is assumed to be [YOLOX-ROS](https://github.com/Ar-Ray-code/YOLOX-ROS).
 
 
+https://user-images.githubusercontent.com/53618876/145365173-29bb3ec1-b088-4ca2-9b2d-3b021a280c3b.mp4
+* demo video is [MOT16-04](https://motchallenge.net/vis/MOT16-04), using yolox-s model.
+
 ## Requirements
 - ROS2 Foxy
 - OpenCV
@@ -13,7 +16,7 @@ The object detector is assumed to be [YOLOX-ROS](https://github.com/Ar-Ray-code/
 - OpenVINO or TensorRT
 - [ros_video_player](https://github.com/fateshelled/ros_video_player)
 
-## How to Use (OpenVINO)
+## Usage (OpenVINO)
 ### Install
 ```
 source /opt/ros/foxy/setup.bash
@@ -28,7 +31,7 @@ git clone --recursive https://github.com/Ar-Ray-code/YOLOX-ROS
 ./YOLOX-ROS/weights/openvino/install.bash yolox_s
 ```
 
-### DEMO
+### RUN
 ```
 cd ~/ros2_ws
 source /opt/ros/foxy/setup.bash
@@ -42,3 +45,5 @@ ros2 launch bytetrack_cpp_node bytetrack_openvino.launch.py video_path:={video f
 
 ```
 
+### ros graph
+![rosgraph](https://user-images.githubusercontent.com/53618876/145340126-8c5fc081-9238-49f8-bace-de2854e546b7.png)
