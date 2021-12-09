@@ -9,7 +9,6 @@
 #include <dirent.h>
 
 #include <rclcpp/rclcpp.hpp>
-#include <rclcpp_components/register_node_macro.hpp>
 #include "bboxes_ex_msgs/msg/bounding_box.hpp"
 #include "bboxes_ex_msgs/msg/bounding_boxes.hpp"
 

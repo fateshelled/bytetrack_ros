@@ -18,7 +18,6 @@ namespace bytetrack_cpp_node{
             auto it = std::find(COCO_CLASSES, COCO_CLASSES + 80, bbox.class_id);
             if (it != COCO_CLASSES + 80){
                 int idx = std::distance(COCO_CLASSES, it);
-                std::cout << idx << std::endl;
                 obj.label = idx;
             }
             
@@ -82,7 +81,6 @@ namespace bytetrack_cpp_node{
 
         vector<Object> objects = BoundingBoxes2Objects(msg->bounding_boxes);
         vector<STrack> output_stracks = this->tracker_->update(objects);
-        std::cout << "Object count = " << objects.size() << ", STrack count = " << output_stracks.size() << std::endl;
         bboxes.bounding_boxes = STrack2BoundingBoxes(output_stracks);
         this->pub_bboxes_->publish(bboxes);
     }
@@ -96,4 +94,6 @@ int main(int argc, char * argv[])
   rclcpp::shutdown();
   return 0;
 }
+
+#include <rclcpp_components/register_node_macro.hpp>
 RCLCPP_COMPONENTS_REGISTER_NODE(bytetrack_cpp_node::ByteTrackNode)
