@@ -36,7 +36,7 @@ namespace bytetrack_cpp_node{
             bbox.ymax = trackers[i].tlbr[2];
             bbox.xmax = trackers[i].tlbr[3];
             bbox.id = trackers[i].track_id;
-            // bbox.class_id = "";
+            bbox.class_id = COCO_CLASSES[trackers[i].label];
             // bbox.center_dist = 0.0;
             // bbox.img_height = 0;
             // bbox.img_width = 0;

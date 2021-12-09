@@ -22,7 +22,7 @@ namespace bytetrack_viewer{
             txt_color = cv::Scalar(255, 255, 255);
         }
 
-        std::string txt = cv::format("ID:%d", bbox.id);
+        std::string txt = cv::format("ID:%d %s", bbox.id, bbox.class_id.c_str());
         int baseLine = 0;
         cv::Size label_size = cv::getTextSize(txt, cv::FONT_HERSHEY_SIMPLEX, 0.6, 1, &baseLine);
         cv::rectangle(frame, 

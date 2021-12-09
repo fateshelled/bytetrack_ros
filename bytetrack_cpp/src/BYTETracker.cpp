@@ -53,6 +53,7 @@ namespace bytetrack_cpp{
 				float score = objects[i].prob;
 
 				STrack strack(STrack::tlbr_to_tlwh(tlbr_), score);
+				strack.label = objects[i].label;
 				if (score >= track_thresh)
 				{
 					detections.push_back(strack);

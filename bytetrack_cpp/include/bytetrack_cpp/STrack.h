@@ -46,6 +46,7 @@ namespace bytetrack_cpp{
 		KAL_MEAN mean;
 		KAL_COVA covariance;
 		float score;
+		int label;
 
 	private:
 		byte_kalman::KalmanFilter kalman_filter;
