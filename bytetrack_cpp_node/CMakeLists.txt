@@ -74,7 +74,7 @@ install(TARGETS bytetrack_cpp_component
 
 # launch, param, etc...
 install(DIRECTORY
-  # launch
+  launch
   # param
   DESTINATION share/${PROJECT_NAME}
 )
