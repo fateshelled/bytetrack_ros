@@ -54,6 +54,26 @@ def generate_launch_description():
             default_value="0.7",
             description="yolox nms threshold"
         ),
+        DeclareLaunchArgument(
+            "save_video",
+            default_value="true",
+            description="record video."
+        ),
+        DeclareLaunchArgument(
+            "save_video_name",
+            default_value="output.mp4",
+            description="record video filename."
+        ),
+        DeclareLaunchArgument(
+            "save_video_fps",
+            default_value="30",
+            description="record video filename."
+        ),
+        DeclareLaunchArgument(
+            "save_video_codec",
+            default_value="MJPG",
+            description="record video filename."
+        ),
 
     ]
     container = ComposableNodeContainer(
@@ -111,6 +131,10 @@ def generate_launch_description():
                             "exact_sync": False,
                             "sub_image_topic_name": "/image_raw",
                             "sub_bboxes_topic_name": "/bytetrack/bounding_boxes",
+                            "save_video": LaunchConfiguration("save_video"),
+                            "save_video_name": LaunchConfiguration("save_video_name"),
+                            "save_video_fps": LaunchConfiguration("save_video_fps"),
+                            "save_video_codec": LaunchConfiguration("save_video_codec"),
                         }],
                         ),
                 ],

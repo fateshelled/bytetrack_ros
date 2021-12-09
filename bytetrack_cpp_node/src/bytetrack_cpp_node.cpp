@@ -31,7 +31,6 @@ namespace bytetrack_cpp_node{
         std::vector<bboxes_ex_msgs::msg::BoundingBox> bboxes;
         for(int i=0; i<trackers.size(); i++){
             bboxes_ex_msgs::msg::BoundingBox bbox;
-            // bbox.class_id = trackers[i].
             bbox.ymin = trackers[i].tlbr[0];
             bbox.xmin = trackers[i].tlbr[1];
             bbox.ymax = trackers[i].tlbr[2];
@@ -81,6 +80,7 @@ namespace bytetrack_cpp_node{
 
         vector<Object> objects = BoundingBoxes2Objects(msg->bounding_boxes);
         vector<STrack> output_stracks = this->tracker_->update(objects);
+        RCLCPP_INFO(this->get_logger(), "Detect objects: %d, Output Tracker: %d", objects.size(), output_stracks.size());
         bboxes.bounding_boxes = STrack2BoundingBoxes(output_stracks);
         this->pub_bboxes_->publish(bboxes);
     }

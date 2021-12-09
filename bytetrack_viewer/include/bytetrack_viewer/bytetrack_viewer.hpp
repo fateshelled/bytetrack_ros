@@ -20,6 +20,7 @@ class ByteTrackViewer : public rclcpp::Node
     public:
         ByteTrackViewer(const std::string &node_name, const rclcpp::NodeOptions& options);
         ByteTrackViewer(const rclcpp::NodeOptions& options);
+        ~ByteTrackViewer();
 
     private:
         using Image = sensor_msgs::msg::Image;
@@ -42,6 +43,12 @@ class ByteTrackViewer : public rclcpp::Node
         bool use_exact_sync_ = false;
         std::string sub_image_topic_name_;
         std::string sub_bboxes_topic_name_;
+
+        bool save_video_;
+        int save_video_fps_;
+        std::string save_video_name_;
+        std::string save_video_codec_;
+        cv::VideoWriter video_;
 
         void initializeParameter_();
         void connectCallback();

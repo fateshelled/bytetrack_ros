@@ -70,12 +70,22 @@ namespace bytetrack_viewer{
         cv::namedWindow("ByteTrackViewer", cv::WINDOW_AUTOSIZE);
 
     }
+    ByteTrackViewer::~ByteTrackViewer(){
+        if(this->video_.isOpened()){
+            this->video_.release();
+            RCLCPP_INFO(this->get_logger(), "save as " + this->save_video_name_ + ".");
+        }
+    }
     void ByteTrackViewer::initializeParameter_()
     {
         this->queue_size_ = this->declare_parameter<int>("queue_size", 5);
         this->use_exact_sync_ = this->declare_parameter<bool>("exact_sync", false);
         this->sub_image_topic_name_ = this->declare_parameter<std::string>("sub_image_topic_name", "/image_raw");
         this->sub_bboxes_topic_name_ = this->declare_parameter<std::string>("sub_bboxes_topic_name", "/bytetrack/bounding_boxes");
+        this->save_video_ = this->declare_parameter<bool>("save_video", false);
+        this->save_video_fps_ = this->declare_parameter<int>("save_video_fps", 30);
+        this->save_video_name_ = this->declare_parameter<std::string>("save_video_name", "output.avi");
+        this->save_video_codec_ = this->declare_parameter<std::string>("save_video_codec", "MJPG");
     }
     void ByteTrackViewer::connectCallback()
     {
@@ -96,9 +106,25 @@ namespace bytetrack_viewer{
         auto img = cv_bridge::toCvCopy(image_msg, "bgr8");
         cv::Mat frame = img->image;
 
+        if (this->save_video_ && ! this->video_.isOpened()){
+            this->video_ = cv::VideoWriter(
+                this->save_video_name_,
+                cv::VideoWriter::fourcc(
+                    this->save_video_codec_.c_str()[0],
+                    this->save_video_codec_.c_str()[1],
+                    this->save_video_codec_.c_str()[2],
+                    this->save_video_codec_.c_str()[3]),
+                this->save_video_fps_,
+                frame.size(),
+                true);
+        }
+
         auto bboxes = trackers_msg->bounding_boxes;
         for(auto bbox: bboxes){
             drawObject(frame, bbox);
+        }
+        if (this->save_video_){
+            this->video_ << frame;
         }
         cv::imshow("ByteTrackViewer", frame);
         auto key = cv::waitKey(1);
