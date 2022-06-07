@@ -25,24 +25,14 @@ def generate_launch_description():
             description="yolox model path."
         ),
         DeclareLaunchArgument(
-            "model_type",
-            default_value="openvino",
-            description="yolox model type. openvino or tensorrt"
+            "model_version",
+            default_value="0.1.1rc0",
+            description="yolox model version."
         ),
         DeclareLaunchArgument(
             "device",
             default_value="CPU",
-            description="model device. if openvino, select CPU, GPU, etc... if tensorrt, input GPU index."
-        ),
-        DeclareLaunchArgument(
-            "image_size/height",
-            default_value="640",
-            description="model input image height."
-        ),
-        DeclareLaunchArgument(
-            "image_size/width",
-            default_value="640",
-            description="model input image width."
+            description="model device. CPU, GPU, MYRIAD, etc..."
         ),
         DeclareLaunchArgument(
             "conf",
@@ -67,12 +57,12 @@ def generate_launch_description():
         DeclareLaunchArgument(
             "save_video_fps",
             default_value="30",
-            description="record video filename."
+            description="record video fps."
         ),
         DeclareLaunchArgument(
             "save_video_codec",
             default_value="MJPG",
-            description="record video filename."
+            description="record video codec."
         ),
 
     ]
@@ -99,10 +89,9 @@ def generate_launch_description():
                         name='yolox_ros_cpp',
                         parameters=[{
                             "model_path": LaunchConfiguration("model_path"),
-                            "model_type": LaunchConfiguration("model_type"),
+                            "model_type": "openvino",
+                            "model_version": LaunchConfiguration("model_version"),
                             "device": LaunchConfiguration("device"),
-                            "image_size/height": LaunchConfiguration("image_size/height"),
-                            "image_size/width": LaunchConfiguration("image_size/width"),
                             "conf": LaunchConfiguration("conf"),
                             "nms": LaunchConfiguration("nms"),
                             "imshow_isshow": False,
