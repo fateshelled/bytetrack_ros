@@ -116,7 +116,7 @@ def generate_launch_description():
                         plugin='bytetrack_viewer::ByteTrackViewer',
                         name='bytetrack_viewer',
                         parameters=[{
-                            "queue_size": 5,
+                            "queue_size": 10,
                             "exact_sync": False,
                             "sub_image_topic_name": "/image_raw",
                             "sub_bboxes_topic_name": "/bytetrack/bounding_boxes",
@@ -130,12 +130,12 @@ def generate_launch_description():
                 output='screen',
         )
 
-    rqt_graph = launch_ros.actions.Node(
-        package="rqt_graph", executable="rqt_graph",
-    )
+    # rqt_graph = launch_ros.actions.Node(
+    #     package="rqt_graph", executable="rqt_graph",
+    # )
 
     return launch.LaunchDescription(
-        launch_args + 
-        [container] + 
-        [rqt_graph]
+        launch_args
+        + [container]
+        # + [rqt_graph]
     )

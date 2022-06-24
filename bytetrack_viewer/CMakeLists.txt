@@ -26,28 +26,28 @@ find_package(cv_bridge REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(bboxes_ex_msgs REQUIRED)
 
-# # add executable
-# add_executable(bytetrack_viewer
-#   src/bytetrack_viewer.cpp
-# )
-# ament_target_dependencies(bytetrack_viewer
-#   rclcpp
-#   rclcpp_components
-#   sensor_msgs
-#   image_transport
-#   message_filters
-#   cv_bridge
-#   OpenCV
-#   bboxes_ex_msgs
-# )
-# target_include_directories(bytetrack_viewer PUBLIC
-#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-#   $<INSTALL_INTERFACE:include>
-# )
-# install(TARGETS
-# bytetrack_viewer
-#   DESTINATION lib/${PROJECT_NAME}
-# )
+# add executable
+add_executable(bytetrack_viewer
+  src/bytetrack_viewer.cpp
+)
+ament_target_dependencies(bytetrack_viewer
+  rclcpp
+  rclcpp_components
+  sensor_msgs
+  image_transport
+  message_filters
+  cv_bridge
+  OpenCV
+  bboxes_ex_msgs
+)
+target_include_directories(bytetrack_viewer PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+install(TARGETS
+bytetrack_viewer
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 # add component
 add_library(bytetrack_viewer_component SHARED

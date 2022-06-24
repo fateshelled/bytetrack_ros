@@ -66,7 +66,6 @@ namespace bytetrack_viewer{
         }
 
         connectCallback();
-        std::lock_guard<std::mutex> lock(this->connect_mutex_);
         cv::namedWindow("ByteTrackViewer", cv::WINDOW_AUTOSIZE);
 
     }
@@ -89,15 +88,9 @@ namespace bytetrack_viewer{
     }
     void ByteTrackViewer::connectCallback()
     {
-        std::lock_guard<std::mutex> lock(this->connect_mutex_);
-        if (0) {
-            this->sub_image_.unsubscribe();
-            this->sub_bboxes_.unsubscribe();
-        } else if (!this->sub_image_.getSubscriber()) {
-            image_transport::TransportHints hints(this, "raw");
-            this->sub_image_.subscribe(this, this->sub_image_topic_name_, hints.getTransport());
-            this->sub_bboxes_.subscribe(this, this->sub_bboxes_topic_name_);
-        }
+        image_transport::TransportHints hints(this, "raw");
+        this->sub_image_.subscribe(this, this->sub_image_topic_name_, hints.getTransport());
+        this->sub_bboxes_.subscribe(this, this->sub_bboxes_topic_name_);
     }
     void ByteTrackViewer::imageCallback(
         const sensor_msgs::msg::Image::ConstSharedPtr & image_msg,
@@ -132,6 +125,16 @@ namespace bytetrack_viewer{
             rclcpp::shutdown();
         }
     }
+}
+
+
+int main(int argc, char * argv[])
+{
+  rclcpp::init(argc, argv);
+  rclcpp::NodeOptions node_options;
+  rclcpp::spin(std::make_shared<bytetrack_viewer::ByteTrackViewer>(node_options));
+  rclcpp::shutdown();
+  return 0;
 }
 
 #include <rclcpp_components/register_node_macro.hpp>

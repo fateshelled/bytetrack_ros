@@ -38,7 +38,6 @@ class ByteTrackViewer : public rclcpp::Node
         std::shared_ptr<Synchronizer> sync_;
         std::shared_ptr<ExactSynchronizer> exact_sync_;
 
-        std::mutex connect_mutex_;
         int queue_size_ = 5;
         bool use_exact_sync_ = false;
         std::string sub_image_topic_name_;
