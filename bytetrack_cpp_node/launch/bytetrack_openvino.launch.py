@@ -81,7 +81,8 @@ def generate_launch_description():
                             "video_path": LaunchConfiguration("video_path"),
                             "frame_id": "map",
                             "loop": False,
-                            "speed": 1.0
+                            "speed": 1.0,
+                            "video_buffer_size": 1,
                         }]),
                     ComposableNode(
                         package='yolox_ros_cpp',
