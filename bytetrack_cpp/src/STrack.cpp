@@ -189,6 +189,8 @@ namespace bytetrack_cpp{
 				stracks[i]->mean[7] = 0;
 			}
 			kalman_filter.predict(stracks[i]->mean, stracks[i]->covariance);
+			stracks[i]->static_tlwh();
+			stracks[i]->static_tlbr();
 		}
 	}
 }
