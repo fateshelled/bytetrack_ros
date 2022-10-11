@@ -2,14 +2,14 @@
 #include <fstream>
 
 namespace bytetrack_cpp{
-	BYTETracker::BYTETracker(int frame_rate, int track_buffer)
+	BYTETracker::BYTETracker(int frame_rate, int track_buffer, float track_thresh, float high_thresh, float match_thresh)
 	{
-		track_thresh = 0.5;
-		high_thresh = 0.6;
-		match_thresh = 0.8;
+		this->track_thresh_ = track_thresh;
+		this->high_thresh_ = high_thresh;
+		this->match_thresh_ = match_thresh;
 
-		frame_id = 0;
-		max_time_lost = int(frame_rate / 30.0 * track_buffer);
+		this->frame_id_ = 0;
+		this->max_time_lost_ = int(frame_rate / 30.0 * track_buffer);
 		cout << "Init ByteTrack!" << endl;
 	}
 
@@ -21,7 +21,7 @@ namespace bytetrack_cpp{
 	{
 
 		////////////////// Step 1: Get detections //////////////////
-		this->frame_id++;
+		this->frame_id_++;
 		vector<STrack> activated_stracks;
 		vector<STrack> refind_stracks;
 		vector<STrack> removed_stracks;
@@ -54,7 +54,7 @@ namespace bytetrack_cpp{
 
 				STrack strack(STrack::tlbr_to_tlwh(tlbr_), score);
 				strack.label = objects[i].label;
-				if (score >= track_thresh)
+				if (score >= track_thresh_)
 				{
 					detections.push_back(strack);
 				}
@@ -85,7 +85,7 @@ namespace bytetrack_cpp{
 
 		vector<vector<int> > matches;
 		vector<int> u_track, u_detection;
-		linear_assignment(dists, dist_size, dist_size_size, match_thresh, matches, u_track, u_detection);
+		linear_assignment(dists, dist_size, dist_size_size, match_thresh_, matches, u_track, u_detection);
 
 		for (int i = 0; i < matches.size(); i++)
 		{
@@ -93,12 +93,12 @@ namespace bytetrack_cpp{
 			STrack *det = &detections[matches[i][1]];
 			if (track->state == TrackState::Tracked)
 			{
-				track->update(*det, this->frame_id);
+				track->update(*det, this->frame_id_);
 				activated_stracks.push_back(*track);
 			}
 			else
 			{
-				track->re_activate(*det, this->frame_id, false);
+				track->re_activate(*det, this->frame_id_, false);
 				refind_stracks.push_back(*track);
 			}
 		}
@@ -133,12 +133,12 @@ namespace bytetrack_cpp{
 			STrack *det = &detections[matches[i][1]];
 			if (track->state == TrackState::Tracked)
 			{
-				track->update(*det, this->frame_id);
+				track->update(*det, this->frame_id_);
 				activated_stracks.push_back(*track);
 			}
 			else
 			{
-				track->re_activate(*det, this->frame_id, false);
+				track->re_activate(*det, this->frame_id_, false);
 				refind_stracks.push_back(*track);
 			}
 		}
@@ -167,7 +167,7 @@ namespace bytetrack_cpp{
 
 		for (int i = 0; i < matches.size(); i++)
 		{
-			unconfirmed[matches[i][0]]->update(detections[matches[i][1]], this->frame_id);
+			unconfirmed[matches[i][0]]->update(detections[matches[i][1]], this->frame_id_);
 			activated_stracks.push_back(*unconfirmed[matches[i][0]]);
 		}
 
@@ -182,16 +182,16 @@ namespace bytetrack_cpp{
 		for (int i = 0; i < u_detection.size(); i++)
 		{
 			STrack *track = &detections[u_detection[i]];
-			if (track->score < this->high_thresh)
+			if (track->score < this->high_thresh_)
 				continue;
-			track->activate(this->kalman_filter, this->frame_id);
+			track->activate(this->kalman_filter, this->frame_id_);
 			activated_stracks.push_back(*track);
 		}
 
 		////////////////// Step 5: Update state //////////////////
 		for (int i = 0; i < this->lost_stracks.size(); i++)
 		{
-			if (this->frame_id - this->lost_stracks[i].end_frame() > this->max_time_lost)
+			if (this->frame_id_ - this->lost_stracks[i].end_frame() > this->max_time_lost_)
 			{
 				this->lost_stracks[i].mark_removed();
 				removed_stracks.push_back(this->lost_stracks[i]);
