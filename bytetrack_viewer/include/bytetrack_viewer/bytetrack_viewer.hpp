@@ -7,7 +7,22 @@
 #include <message_filters/synchronizer.h>
 #include <message_filters/sync_policies/exact_time.h>
 #include <message_filters/sync_policies/approximate_time.h>
+
+#define CV_BRIDGE_VERSION_GTE(major, minor, patch) \
+  ((major < CV_BRIDGE_VERSION_MAJOR)   ? true      \
+   : (major > CV_BRIDGE_VERSION_MAJOR) ? false     \
+   : (minor < CV_BRIDGE_VERSION_MINOR) ? true      \
+   : (minor > CV_BRIDGE_VERSION_MINOR) ? false     \
+   : (patch < CV_BRIDGE_VERSION_PATCH) ? true      \
+   : (patch > CV_BRIDGE_VERSION_PATCH) ? false     \
+                                       : true)
+
+#if CV_BRIDGE_VERSION_GTE(3, 4, 0)
 #include <cv_bridge/cv_bridge.hpp>
+#else
+#include <cv_bridge/cv_bridge.h>
+#endif
+
 #include <opencv2/opencv.hpp>
 
 #include "bboxes_ex_msgs/msg/bounding_box.hpp"
