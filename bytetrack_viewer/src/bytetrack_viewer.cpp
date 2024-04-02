@@ -72,7 +72,7 @@ namespace bytetrack_viewer{
     ByteTrackViewer::~ByteTrackViewer(){
         if(this->video_.isOpened()){
             this->video_.release();
-            RCLCPP_INFO(this->get_logger(), "save as " + this->save_video_name_ + ".");
+            RCLCPP_INFO_STREAM(this->get_logger(), "save as " << this->save_video_name_ << ".");
         }
     }
     void ByteTrackViewer::initializeParameter_()

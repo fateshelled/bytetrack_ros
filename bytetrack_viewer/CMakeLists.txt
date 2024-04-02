@@ -26,6 +26,12 @@ find_package(cv_bridge REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(bboxes_ex_msgs REQUIRED)
 
+add_compile_definitions(
+  CV_BRIDGE_VERSION_MAJOR=${cv_bridge_VERSION_MAJOR}
+  CV_BRIDGE_VERSION_MINOR=${cv_bridge_VERSION_MINOR}
+  CV_BRIDGE_VERSION_PATCH=${cv_bridge_VERSION_PATCH}
+)
+
 # add executable
 add_executable(bytetrack_viewer
   src/bytetrack_viewer.cpp
