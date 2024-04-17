@@ -8,7 +8,7 @@ https://user-images.githubusercontent.com/53618876/145365173-29bb3ec1-b088-4ca2-
 * demo video is [MOT16-04](https://motchallenge.net/vis/MOT16-04), using yolox-s model.
 
 ## Requirements
-- ROS2 Foxy
+- ROS2 Foxy or later
 - OpenCV
 - Eigen3
 - [bbox_ex_msgs](https://github.com/Ar-Ray-code/bbox_ex_msgs)
@@ -18,8 +18,10 @@ https://user-images.githubusercontent.com/53618876/145365173-29bb3ec1-b088-4ca2-
 
 ## Usage (OpenVINO)
 ### Install
-```
+```bash
 source /opt/ros/foxy/setup.bash
+# source /opt/ros/humble/setup.bash
+
 source /opt/intel/openvino_2021/bin/setupvars.sh
 
 cd ~/ros2_ws/src
@@ -32,9 +34,10 @@ git clone --recursive https://github.com/Ar-Ray-code/YOLOX-ROS
 ```
 
 ### RUN
-```
+```bash
 cd ~/ros2_ws
 source /opt/ros/foxy/setup.bash
+# source /opt/ros/humble/setup.bash
 source ./install/setup.bash
 
 # launch with WebCam
