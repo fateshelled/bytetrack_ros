@@ -6,10 +6,11 @@ from launch_ros.descriptions import ComposableNode
 
 
 def generate_launch_description():
+
     launch_args = [
         DeclareLaunchArgument(
-            "video_path",
-            default_value="/dev/video0",
+            'video_path',
+            default_value='/dev/video0',
             description="input video file path."
         ),
         DeclareLaunchArgument(
@@ -33,29 +34,44 @@ def generate_launch_description():
             description="track threshold."
         ),
         DeclareLaunchArgument(
-            "model_path",
-            default_value="./install/yolox_ros_cpp/share/yolox_ros_cpp/weights/openvino/yolox_s.xml",
-            description="yolox model path."
+            'model_path',
+            default_value="./src/YOLOX-ROS/weights/tensorrt/yolox_tiny.trt",
+            description='yolox model path.'
         ),
         DeclareLaunchArgument(
-            "model_version",
-            default_value="0.1.1rc0",
-            description="yolox model version."
+            'p6',
+            default_value='false',
+            description='with p6.'
         ),
         DeclareLaunchArgument(
-            "device",
-            default_value="CPU",
-            description="model device. CPU, GPU, MYRIAD, etc..."
+            'class_labels_path',
+            default_value='',
+            description='if use custom model, set class name labels. '
         ),
         DeclareLaunchArgument(
-            "conf",
-            default_value="0.1",
-            description="yolox confidence threshold."
+            'num_classes',
+            default_value='80',
+            description='num classes.'
         ),
         DeclareLaunchArgument(
-            "nms",
-            default_value="0.7",
-            description="yolox nms threshold"
+            'model_version',
+            default_value='0.1.1rc0',
+            description='yolox model version.'
+        ),
+        DeclareLaunchArgument(
+            'device',
+            default_value='0',
+            description='GPU index. Set in string type. ex 0'
+        ),
+        DeclareLaunchArgument(
+            'conf',
+            default_value='0.1',
+            description='yolox confidence threshold.'
+        ),
+        DeclareLaunchArgument(
+            'nms',
+            default_value='0.7',
+            description='yolox nms threshold'
         ),
         DeclareLaunchArgument(
             "save_video",
@@ -77,9 +93,17 @@ def generate_launch_description():
             default_value="MJPG",
             description="record video codec."
         ),
-
     ]
     composable_nodes = [
+        # ComposableNode(
+        #     package='v4l2_camera',
+        #     plugin='v4l2_camera::V4L2Camera',
+        #     name='v4l2_camera',
+        #     parameters=[{
+        #             'video_device': LaunchConfiguration('video_path'),
+        #             'image_size': [640, 480]
+        #     }]
+        # ),
         ComposableNode(
             package='ros_video_player',
             plugin='ros_video_player::VideoPlayerNode',
@@ -88,25 +112,28 @@ def generate_launch_description():
                 "publish_topic_name": "/image_raw",
                 "video_path": LaunchConfiguration("video_path"),
                 "frame_id": "map",
-                            "loop": False,
-                            "speed": 1.0,
-                            "video_buffer_size": 1,
+                "loop": False,
+                "speed": 1.0,
+                "video_buffer_size": 1,
             }]),
         ComposableNode(
             package='yolox_ros_cpp',
             plugin='yolox_ros_cpp::YoloXNode',
             name='yolox_ros_cpp',
             parameters=[{
-                "model_path": LaunchConfiguration("model_path"),
-                "model_type": "openvino",
-                "model_version": LaunchConfiguration("model_version"),
-                "openvino/device": LaunchConfiguration("device"),
-                "conf": LaunchConfiguration("conf"),
-                "nms": LaunchConfiguration("nms"),
-                "imshow_isshow": False,
-                "src_image_topic_name": "/image_raw",
-                "publish_image_topic_name": "/yolox/image_raw",
-                "publish_boundingbox_topic_name": "/yolox/bounding_boxes",
+                    'model_path': LaunchConfiguration('model_path'),
+                    'p6': LaunchConfiguration('p6'),
+                    'class_labels_path': LaunchConfiguration('class_labels_path'),
+                    'num_classes': LaunchConfiguration('num_classes'),
+                    'model_type': 'tensorrt',
+                    'model_version': LaunchConfiguration('model_version'),
+                    'tensorrt/device': LaunchConfiguration('device'),
+                    'conf': LaunchConfiguration('conf'),
+                    'nms': LaunchConfiguration('nms'),
+                    'imshow_isshow': False,
+                    "src_image_topic_name": "/image_raw",
+                    "publish_image_topic_name": "/yolox/image_raw",
+                    'publish_boundingbox_topic_name': "/yolox/bounding_boxes",
             }],
         ),
         ComposableNode(
@@ -139,6 +166,7 @@ def generate_launch_description():
             }],
         ),
     ]
+
     container = ComposableNodeContainer(
         name='bytetrack_container',
         namespace='',
@@ -148,12 +176,6 @@ def generate_launch_description():
         output='screen',
     )
 
-    # rqt_graph = launch_ros.actions.Node(
-    #     package="rqt_graph", executable="rqt_graph",
-    # )
-
     return launch.LaunchDescription(
-        launch_args
-        + [container]
-        # + [rqt_graph]
+        launch_args + [container]
     )
